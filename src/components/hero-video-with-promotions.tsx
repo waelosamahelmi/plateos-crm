@@ -151,7 +151,7 @@ export function HeroVideoWithPromotions() {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href="/menu">
+            <Link href="/demo/menu">
               <Button
                 size="lg"
                 className="px-8 py-6 text-lg font-bold bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white shadow-2xl transform hover:scale-105 transition-all duration-300 border-2 border-white/20 backdrop-blur-md group"

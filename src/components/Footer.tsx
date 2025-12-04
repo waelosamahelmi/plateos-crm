@@ -101,19 +101,19 @@ export function Footer() {
             </h3>
             <ul className="space-y-3">
               <li>
-                <a href="/" className="text-gray-400 hover:text-white transition-colors flex items-center group">
+                <a href="/demo" className="text-gray-400 hover:text-white transition-colors flex items-center group">
                   <div className="w-0 h-0.5 bg-gradient-to-r from-red-500 to-orange-500 group-hover:w-4 transition-all mr-0 group-hover:mr-2"></div>
                   {t("Etusivu", "Home")}
                 </a>
               </li>
               <li>
-                <a href="/menu" className="text-gray-400 hover:text-white transition-colors flex items-center group">
+                <a href="/demo/menu" className="text-gray-400 hover:text-white transition-colors flex items-center group">
                   <div className="w-0 h-0.5 bg-gradient-to-r from-red-500 to-orange-500 group-hover:w-4 transition-all mr-0 group-hover:mr-2"></div>
                   Menu
                 </a>
               </li>
               <li>
-                <a href="/admin" className="text-gray-400 hover:text-white transition-colors flex items-center group">
+                <a href="/demo/admin" className="text-gray-400 hover:text-white transition-colors flex items-center group">
                   <div className="w-0 h-0.5 bg-gradient-to-r from-red-500 to-orange-500 group-hover:w-4 transition-all mr-0 group-hover:mr-2"></div>
                   {t("Hallinta", "Admin")}
                 </a>
@@ -128,13 +128,13 @@ export function Footer() {
             </h3>
             <ul className="space-y-3">
               <li>
-                <a href="/terms" className="text-gray-400 hover:text-white transition-colors flex items-center group">
+                <a href="/demo/terms" className="text-gray-400 hover:text-white transition-colors flex items-center group">
                   <div className="w-0 h-0.5 bg-gradient-to-r from-red-500 to-orange-500 group-hover:w-4 transition-all mr-0 group-hover:mr-2"></div>
                   {t("Käyttöehdot", "Terms & Conditions")}
                 </a>
               </li>
               <li>
-                <a href="/privacy" className="text-gray-400 hover:text-white transition-colors flex items-center group">
+                <a href="/demo/privacy" className="text-gray-400 hover:text-white transition-colors flex items-center group">
                   <div className="w-0 h-0.5 bg-gradient-to-r from-red-500 to-orange-500 group-hover:w-4 transition-all mr-0 group-hover:mr-2"></div>
                   {t("Tietosuoja", "Privacy Policy")}
                 </a>

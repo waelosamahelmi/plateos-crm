@@ -29,8 +29,7 @@ function AppContent() {
   const [showTour, setShowTour] = useState(true);
   const [location] = useLocation();
   
-  // Don't show tour or mobile app on landing page, contact, register, or portal pages
-  const isLandingPage = location === '/' || location === '/contact' || location === '/register' || location === '/portal';
+  // Only show mobile app preview and tour on /demo/* pages
   const isDemoPage = location.startsWith('/demo');
 
   return (
@@ -56,9 +55,9 @@ function AppContent() {
           </Route>
         </Switch>
         <Toaster />
-        {!isLandingPage && <MobileAppPreview />}
+        {isDemoPage && <MobileAppPreview />}
       </div>
-      {!isLandingPage && isDemoPage && showTour && (
+      {isDemoPage && showTour && (
         <TourGuide language={language} onComplete={() => setShowTour(false)} />
       )}
     </>

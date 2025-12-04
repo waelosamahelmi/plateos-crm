@@ -78,7 +78,7 @@ export default function HomePage() {
             </p>
           </div>
           <div className="space-y-6">
-            <Link href="/menu">
+            <Link href="/demo/menu">
               <Card className="group cursor-pointer transition-all duration-700 hover:shadow-2xl border-0 overflow-hidden relative animate-slide-up bg-white dark:bg-stone-800">
                 <div className="absolute inset-0 transform translate-x-full group-hover:translate-x-0 transition-transform duration-700" style={{ background: theme.getPrimaryGradient() }}></div>
                 <CardContent className="p-0 relative z-10">
@@ -217,7 +217,7 @@ export default function HomePage() {
             <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
               {t("Kokeile näitä uskomattomia makuja", "Try these amazing flavors")}
             </p>
-            <Link href="/menu">
+            <Link href="/demo/menu">
               <Button
                 size="lg"
                 className="text-white font-bold px-8 py-6 text-lg rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 group"
@@ -280,7 +280,7 @@ export default function HomePage() {
                         </span>
                       )}
                     </div>
-                    <Link href="/menu">
+                    <Link href="/demo/menu">
                       <Button
                         size="lg"
                         className="rounded-full text-white font-bold shadow-lg group-hover:shadow-xl transition-all px-6"
