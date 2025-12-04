@@ -1,0 +1,19 @@
+# PlateOS - Robots.txt
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://plateos.fi/sitemap.xml
+
+# Disallow admin and internal pages
+Disallow: /portal
+Disallow: /demo/login
+Disallow: /admin
+
+# Allow search engines to crawl all public pages
+Allow: /
+Allow: /contact
+Allow: /register
+Allow: /demo
+Allow: /privacy
+Allow: /terms

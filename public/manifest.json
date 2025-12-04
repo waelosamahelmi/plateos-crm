@@ -1,0 +1,31 @@
+{
+  "name": "PlateOS - Ravintolan Tilausjärjestelmä",
+  "short_name": "PlateOS",
+  "description": "Moderni ravintolan tilaus- ja hallintajärjestelmä. QR-tilaukset, reaaliaikainen seuranta ja analytiikka.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#EA580C",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["business", "productivity", "food"],
+  "lang": "fi",
+  "dir": "ltr"
+}
