@@ -4,6 +4,8 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { AISalesChat } from "@/components/ai-sales-chat";
 import { AIChatWidget } from "@/components/ai-chat-widget";
+import { LanguageSwitcher, LanguageSwitcherMobile } from "@/components/language-switcher";
+import { useLanguage } from "@/lib/language-context";
 import { Link } from "wouter";
 import { 
   ArrowRight, 
@@ -27,6 +29,7 @@ export default function LandingPageAwwwards() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { t, isRTL } = useLanguage();
 
   // Handle scroll for header
   useEffect(() => {
@@ -153,16 +156,16 @@ export default function LandingPageAwwwards() {
   }, []);
 
   const features = [
-    { icon: <Zap />, title: "Nopea", desc: "Käyttöönotto 24h" },
-    { icon: <Globe />, title: "Verkkotilaukset", desc: "24/7 myynti" },
-    { icon: <Shield />, title: "Turvallinen", desc: "Stripe & SSL" },
-    { icon: <BarChart3 />, title: "Analytiikka", desc: "Reaaliaikaiset raportit" },
-    { icon: <Smartphone />, title: "Mobiili", desc: "Admin-sovellus" },
-    { icon: <Star />, title: "Brändi", desc: "Oma ilme" },
+    { icon: <Zap />, title: t('features.fast'), desc: t('features.fast.desc') },
+    { icon: <Globe />, title: t('features.online'), desc: t('features.online.desc') },
+    { icon: <Shield />, title: t('features.secure'), desc: t('features.secure.desc') },
+    { icon: <BarChart3 />, title: t('features.analytics'), desc: t('features.analytics.desc') },
+    { icon: <Smartphone />, title: t('features.mobile'), desc: t('features.mobile.desc') },
+    { icon: <Star />, title: t('features.brand'), desc: t('features.brand.desc') },
   ];
 
   return (
-    <div ref={containerRef} className="bg-[#0a0a0a] text-white min-h-screen overflow-x-hidden">
+    <div ref={containerRef} className={`bg-[#0a0a0a] text-white min-h-screen overflow-x-hidden ${isRTL ? 'rtl' : 'ltr'}`}>
       {/* Fixed Header */}
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled ? "bg-black/80 backdrop-blur-xl border-b border-white/10" : ""
@@ -174,15 +177,16 @@ export default function LandingPageAwwwards() {
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-sm text-white/70 hover:text-white transition-colors">Ominaisuudet</a>
-            <a href="#pricing" className="text-sm text-white/70 hover:text-white transition-colors">Hinnoittelu</a>
-            <a href="#testimonials" className="text-sm text-white/70 hover:text-white transition-colors">Referenssit</a>
+            <a href="#features" className="text-sm text-white/70 hover:text-white transition-colors">{t('nav.features')}</a>
+            <a href="#pricing" className="text-sm text-white/70 hover:text-white transition-colors">{t('nav.pricing')}</a>
+            <a href="#testimonials" className="text-sm text-white/70 hover:text-white transition-colors">{t('nav.testimonials')}</a>
             <Link href="/contact">
-              <span className="text-sm text-white/70 hover:text-white transition-colors cursor-pointer">Yhteystiedot</span>
+              <span className="text-sm text-white/70 hover:text-white transition-colors cursor-pointer">{t('nav.contact')}</span>
             </Link>
+            <LanguageSwitcher variant="minimal" />
             <Link href="/demo">
               <Button variant="outline" size="sm" className="border-white/20 text-white hover:bg-white hover:text-black transition-all">
-                Demo
+                {t('nav.demo')}
               </Button>
             </Link>
             <Link href="/register">
@@ -190,7 +194,7 @@ export default function LandingPageAwwwards() {
                 size="sm" 
                 className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700"
               >
-                Rekisteröidy
+                {t('nav.register')}
               </Button>
             </Link>
           </nav>
@@ -207,17 +211,20 @@ export default function LandingPageAwwwards() {
         {/* Mobile Nav */}
         {isMenuOpen && (
           <div className="md:hidden bg-black/95 backdrop-blur-xl border-t border-white/10 p-6 space-y-4">
-            <a href="#features" className="block text-white/70 hover:text-white">Ominaisuudet</a>
-            <a href="#pricing" className="block text-white/70 hover:text-white">Hinnoittelu</a>
-            <a href="#testimonials" className="block text-white/70 hover:text-white">Referenssit</a>
+            <a href="#features" className="block text-white/70 hover:text-white">{t('nav.features')}</a>
+            <a href="#pricing" className="block text-white/70 hover:text-white">{t('nav.pricing')}</a>
+            <a href="#testimonials" className="block text-white/70 hover:text-white">{t('nav.testimonials')}</a>
             <Link href="/contact">
-              <span className="block text-white/70 hover:text-white cursor-pointer">Yhteystiedot</span>
+              <span className="block text-white/70 hover:text-white cursor-pointer">{t('nav.contact')}</span>
             </Link>
+            <div className="pt-4 border-t border-white/10">
+              <LanguageSwitcherMobile />
+            </div>
             <Link href="/demo">
-              <Button variant="outline" className="w-full border-white/20 text-white">Demo</Button>
+              <Button variant="outline" className="w-full border-white/20 text-white">{t('nav.demo')}</Button>
             </Link>
             <Link href="/register">
-              <Button className="w-full bg-gradient-to-r from-orange-500 to-red-600">Rekisteröidy</Button>
+              <Button className="w-full bg-gradient-to-r from-orange-500 to-red-600">{t('nav.register')}</Button>
             </Link>
           </div>
         )}
@@ -236,29 +243,28 @@ export default function LandingPageAwwwards() {
             <div className="hero-line mb-8 overflow-hidden">
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm">
                 <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                Yli 50 ravintolan luottama alusta
+                {t('hero.badge')}
               </span>
             </div>
 
             {/* Main headline */}
             <h1 className="text-[clamp(3rem,10vw,8rem)] font-black leading-[0.9] tracking-tight mb-8">
               <div className="overflow-hidden">
-                <span className="hero-line block">Ravintolasi</span>
+                <span className="hero-line block">{t('hero.title.line1')}</span>
               </div>
               <div className="overflow-hidden">
                 <span className="hero-line block bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 bg-clip-text text-transparent">
-                  digitaalinen
+                  {t('hero.title.line2')}
                 </span>
               </div>
               <div className="overflow-hidden">
-                <span className="hero-line block">sydän.</span>
+                <span className="hero-line block">{t('hero.title.line3')}</span>
               </div>
             </h1>
 
             {/* Description */}
             <p className="hero-desc text-xl md:text-2xl text-white/60 max-w-2xl mb-12 leading-relaxed">
-              Moderni tilaus- ja hallintajärjestelmä, joka kasvattaa myyntiäsi 24/7. 
-              Käyttöönotto alle vuorokaudessa.
+              {t('hero.description')}
             </p>
 
             {/* CTAs */}
@@ -269,7 +275,7 @@ export default function LandingPageAwwwards() {
                   className="hero-cta h-14 px-8 text-lg bg-white text-black hover:bg-white/90 rounded-full group"
                 >
                   <Play className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
-                  Kokeile demoa
+                  {t('hero.cta.demo')}
                 </Button>
               </Link>
               <Button 
@@ -278,7 +284,7 @@ export default function LandingPageAwwwards() {
                 className="hero-cta h-14 px-8 text-lg border-white/20 text-white hover:bg-white/10 rounded-full"
                 onClick={() => setShowChat(true)}
               >
-                Keskustele AI:n kanssa
+                {t('hero.cta.chat')}
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </div>
@@ -303,7 +309,7 @@ export default function LandingPageAwwwards() {
 
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/40">
-          <span className="text-xs uppercase tracking-widest">Scroll</span>
+          <span className="text-xs uppercase tracking-widest">{t('hero.scroll')}</span>
           <ChevronDown className="w-5 h-5 animate-bounce" />
         </div>
       </section>
@@ -313,7 +319,7 @@ export default function LandingPageAwwwards() {
         <div className="marquee-content flex gap-8 whitespace-nowrap">
           {[...Array(10)].map((_, i) => (
             <span key={i} className="text-4xl md:text-6xl font-black text-white/5 uppercase tracking-wider">
-              PlateOS • Tilaukset • Myynti • Kasvu • 
+              PlateOS • {t('features.online')} • {t('features.analytics')} • {t('features.fast')} • 
             </span>
           ))}
         </div>
@@ -324,13 +330,13 @@ export default function LandingPageAwwwards() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="animate-section text-center mb-20">
             <span className="text-orange-500 text-sm font-semibold uppercase tracking-widest mb-4 block">
-              Ominaisuudet
+              {t('nav.features')}
             </span>
             <h2 className="text-4xl md:text-6xl font-black mb-6">
-              Kaikki yhdessä<br />paikassa
+              {t('features.title')}
             </h2>
             <p className="text-white/50 text-lg max-w-2xl mx-auto">
-              PlateOS sisältää kaiken tarvittavan modernin ravintolan pyörittämiseen
+              {t('features.subtitle')}
             </p>
           </div>
 
@@ -356,13 +362,13 @@ export default function LandingPageAwwwards() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="animate-section text-center mb-20">
             <span className="text-orange-500 text-sm font-semibold uppercase tracking-widest mb-4 block">
-              Hinnoittelu
+              {t('nav.pricing')}
             </span>
             <h2 className="text-4xl md:text-6xl font-black mb-6">
-              Yksinkertainen<br />& läpinäkyvä
+              {t('pricing.title')}
             </h2>
             <p className="text-white/50 text-lg">
-              Ei piilokustannuksia. Ei kuukausimaksuja ensimmäisenä vuonna.
+              {t('pricing.subtitle')}
             </p>
           </div>
 
@@ -370,18 +376,25 @@ export default function LandingPageAwwwards() {
             {/* Combined Pricing Card */}
             <div className="pricing-item p-8 md:p-10 rounded-3xl bg-gradient-to-br from-orange-500/20 to-red-500/20 border border-orange-500/30 relative overflow-hidden">
               <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-orange-500 text-xs font-bold">
-                KAIKKI SISÄLTYY
+                {t('pricing.badge')}
               </div>
               
               {/* Setup Fee */}
               <div className="mb-8 pb-8 border-b border-white/10">
-                <div className="text-sm text-orange-400 uppercase tracking-wider mb-2">Käyttöönotto</div>
+                <div className="text-sm text-orange-400 uppercase tracking-wider mb-2">{t('pricing.setup')}</div>
                 <div className="flex items-baseline gap-2 mb-4">
                   <span className="text-5xl md:text-6xl font-black">€1,500</span>
-                  <span className="text-white/50">kertamaksu</span>
+                  <span className="text-white/50">{t('pricing.oneTime')}</span>
                 </div>
                 <ul className="space-y-2">
-                  {["Räätälöity ratkaisu", "Oma brändi & design", "Menu-konfigurointi", "Stripe-integraatio", "Koulutus", "Ilmainen hosting 1. vuosi"].map((item, i) => (
+                  {[
+                    t('pricing.setup.item1'),
+                    t('pricing.setup.item2'),
+                    t('pricing.setup.item3'),
+                    t('pricing.setup.item4'),
+                    t('pricing.setup.item5'),
+                    t('pricing.setup.item6')
+                  ].map((item, i) => (
                     <li key={i} className="flex items-center gap-3 text-white/70">
                       <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
                       {item}
@@ -392,14 +405,18 @@ export default function LandingPageAwwwards() {
               
               {/* Monthly Fee */}
               <div className="mb-8">
-                <div className="text-sm text-orange-400 uppercase tracking-wider mb-2">Jatkuva palvelu</div>
+                <div className="text-sm text-orange-400 uppercase tracking-wider mb-2">{t('pricing.monthly')}</div>
                 <div className="flex items-baseline gap-2 mb-2">
                   <span className="text-4xl md:text-5xl font-black">€10</span>
-                  <span className="text-white/50">/kk</span>
+                  <span className="text-white/50">{t('pricing.perMonth')}</span>
                 </div>
-                <p className="text-white/60 text-sm mb-4">Toisen vuoden alusta</p>
+                <p className="text-white/60 text-sm mb-4">{t('pricing.fromSecondYear')}</p>
                 <ul className="space-y-2">
-                  {["24/7 hosting & varmuuskopiot", "SSL & tietoturva", "Päivitykset & sähköpostituki"].map((item, i) => (
+                  {[
+                    t('pricing.monthly.item1'),
+                    t('pricing.monthly.item2'),
+                    t('pricing.monthly.item3')
+                  ].map((item, i) => (
                     <li key={i} className="flex items-center gap-3 text-white/70">
                       <Check className="w-5 h-5 text-orange-500 flex-shrink-0" />
                       {item}
@@ -409,7 +426,7 @@ export default function LandingPageAwwwards() {
               </div>
               
               <Button className="w-full h-14 text-lg bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white rounded-full" onClick={() => setShowChat(true)}>
-                Aloita nyt
+                {t('pricing.cta')}
               </Button>
             </div>
           </div>
@@ -421,10 +438,10 @@ export default function LandingPageAwwwards() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="animate-section text-center mb-20">
             <span className="text-orange-500 text-sm font-semibold uppercase tracking-widest mb-4 block">
-              Asiakkaamme
+              {t('testimonials.subtitle')}
             </span>
             <h2 className="text-4xl md:text-6xl font-black">
-              Ravintolat jotka<br />luottavat meihin
+              {t('testimonials.title')}
             </h2>
           </div>
 
@@ -526,16 +543,16 @@ export default function LandingPageAwwwards() {
         <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
           <div className="animate-section">
             <h2 className="text-4xl md:text-7xl font-black mb-8">
-              Valmis<br />aloittamaan?
+              {t('cta.title')}
             </h2>
             <p className="text-white/60 text-xl mb-12 max-w-2xl mx-auto">
-              Liity yli 50 menestyvän ravintolan joukkoon. Aloita ilmainen demo tänään.
+              {t('cta.subtitle')}
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/demo">
                 <Button size="lg" className="h-14 px-10 text-lg bg-white text-black hover:bg-white/90 rounded-full">
                   <Play className="w-5 h-5 mr-2" />
-                  Kokeile demoa
+                  {t('hero.cta.demo')}
                 </Button>
               </Link>
               <Button 
@@ -544,14 +561,14 @@ export default function LandingPageAwwwards() {
                 className="h-14 px-10 text-lg border-white/20 text-white hover:bg-white/10 rounded-full"
                 onClick={() => setShowChat(true)}
               >
-                Ota yhteyttä
+                {t('cta.contact')}
               </Button>
               <Link href="/register">
                 <Button 
                   size="lg"
                   className="h-14 px-10 text-lg bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white rounded-full"
                 >
-                  Rekisteröidy nyt
+                  {t('cta.registerNow')}
                 </Button>
               </Link>
             </div>
@@ -568,39 +585,39 @@ export default function LandingPageAwwwards() {
                 <img src="/logo.svg" alt="PlateOS" className="h-8 w-auto" />
               </div>
               <p className="text-white/50 text-sm">
-                Moderni tilaus- ja hallintajärjestelmä ravintoloille.
+                {t('footer.tagline')}
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Tuote</h4>
+              <h4 className="font-semibold mb-4">{t('footer.product')}</h4>
               <ul className="space-y-2 text-sm text-white/50">
-                <li><a href="#features" className="hover:text-white transition-colors">Ominaisuudet</a></li>
-                <li><a href="#pricing" className="hover:text-white transition-colors">Hinnoittelu</a></li>
-                <li><Link href="/demo" className="hover:text-white transition-colors">Demo</Link></li>
+                <li><a href="#features" className="hover:text-white transition-colors">{t('nav.features')}</a></li>
+                <li><a href="#pricing" className="hover:text-white transition-colors">{t('nav.pricing')}</a></li>
+                <li><Link href="/demo" className="hover:text-white transition-colors">{t('nav.demo')}</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Yritys</h4>
+              <h4 className="font-semibold mb-4">{t('footer.company')}</h4>
               <ul className="space-y-2 text-sm text-white/50">
-                <li><Link href="/contact" className="hover:text-white transition-colors">Yhteystiedot</Link></li>
-                <li><Link href="/register" className="hover:text-white transition-colors">Rekisteröidy</Link></li>
+                <li><Link href="/contact" className="hover:text-white transition-colors">{t('nav.contact')}</Link></li>
+                <li><Link href="/register" className="hover:text-white transition-colors">{t('nav.register')}</Link></li>
                 <li><a href="mailto:info@plateos.fi" className="hover:text-white transition-colors">info@plateos.fi</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Laki</h4>
+              <h4 className="font-semibold mb-4">{t('footer.legal')}</h4>
               <ul className="space-y-2 text-sm text-white/50">
-                <li><Link href="/demo/privacy" className="hover:text-white transition-colors">Tietosuoja</Link></li>
-                <li><Link href="/demo/terms" className="hover:text-white transition-colors">Käyttöehdot</Link></li>
+                <li><Link href="/demo/privacy" className="hover:text-white transition-colors">{t('footer.privacy')}</Link></li>
+                <li><Link href="/demo/terms" className="hover:text-white transition-colors">{t('footer.terms')}</Link></li>
               </ul>
             </div>
           </div>
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 pt-8 border-t border-white/10">
             <div className="text-sm text-white/30">
-              © 2025 PlateOS. Kaikki oikeudet pidätetään.
+              © 2025 PlateOS. {t('footer.copyright')}
             </div>
             <div className="text-sm text-white/30">
-              Kehittänyt <a href="https://helmies.fi" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-white transition-colors">Helmies Oy</a> (Y-tunnus: 3577819-7)
+              {t('footer.developedBy')} <a href="https://helmies.fi" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-white transition-colors">Helmies Oy</a> (Y-tunnus: 3577819-7)
             </div>
           </div>
         </div>

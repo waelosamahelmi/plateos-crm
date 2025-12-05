@@ -15,11 +15,11 @@ import {
   CheckCircle, 
   AlertTriangle,
   MessageSquare,
-  HelpCircle,
-  MapPin,
-  Phone
+  HelpCircle
 } from "lucide-react";
 import { submitContactForm } from "@/lib/supabase";
+import { useLanguage } from "@/lib/language-context";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -31,11 +31,11 @@ export default function LandingContactPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { t, isRTL } = useLanguage();
 
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: '',
     subject: '',
     message: '',
   });
@@ -63,42 +63,40 @@ export default function LandingContactPage() {
 
       if (result) {
         setIsSubmitted(true);
-        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+        setFormData({ name: '', email: '', subject: '', message: '' });
       } else {
-        setError('Lomakkeen lähetys epäonnistui. Yritä uudelleen.');
+        setError(t('contact.form.error'));
       }
     } catch (err) {
-      setError('Tapahtui virhe. Yritä uudelleen myöhemmin.');
+      setError(t('common.error'));
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const formTypes = [
-    { id: 'contact' as FormType, label: 'Yleinen yhteydenotto', icon: <MessageSquare className="w-5 h-5" /> },
-    { id: 'support' as FormType, label: 'Tuki ja kysymykset', icon: <HelpCircle className="w-5 h-5" /> },
-    { id: 'complaint' as FormType, label: 'Palaute ja reklamaatiot', icon: <AlertTriangle className="w-5 h-5" /> },
+    { id: 'contact' as FormType, label: t('contact.form.type.general'), icon: <MessageSquare className="w-5 h-5" /> },
+    { id: 'support' as FormType, label: t('contact.form.type.support'), icon: <HelpCircle className="w-5 h-5" /> },
+    { id: 'complaint' as FormType, label: t('contact.form.type.complaint'), icon: <AlertTriangle className="w-5 h-5" /> },
   ];
 
   return (
-    <div ref={containerRef} className="bg-[#0a0a0a] text-white min-h-screen">
+    <div ref={containerRef} className={`bg-[#0a0a0a] text-white min-h-screen ${isRTL ? 'rtl' : 'ltr'}`}>
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/">
-            <div className="flex items-center gap-2 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center font-black text-lg">
-                P
-              </div>
-              <span className="text-xl font-bold tracking-tight">PlateOS</span>
-            </div>
+            <img src="/logo.svg" alt="PlateOS" className="h-7 w-auto" />
           </Link>
-          <Link href="/">
-            <Button variant="ghost" className="text-white/70 hover:text-white">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Takaisin
-            </Button>
-          </Link>
+          <div className="flex items-center gap-4">
+            <LanguageSwitcher variant="minimal" />
+            <Link href="/">
+              <Button variant="ghost" className="text-white/70 hover:text-white">
+                <ArrowLeft className={`w-4 h-4 ${isRTL ? 'ml-2 rotate-180' : 'mr-2'}`} />
+                {t('nav.back')}
+              </Button>
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -107,13 +105,13 @@ export default function LandingContactPage() {
           {/* Hero */}
           <div className="animate-in text-center mb-16">
             <span className="text-orange-500 text-sm font-semibold uppercase tracking-widest mb-4 block">
-              Yhteystiedot
+              {t('contact.sidebar.title')}
             </span>
             <h1 className="text-4xl md:text-6xl font-black mb-6">
-              Ota yhteyttä
+              {t('contact.title')}
             </h1>
             <p className="text-white/60 text-lg max-w-2xl mx-auto">
-              Olemme täällä auttamassa. Kerro meille kuinka voimme palvella sinua.
+              {t('contact.subtitle')}
             </p>
           </div>
 
@@ -126,46 +124,12 @@ export default function LandingContactPage() {
                     <Mail className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-white">Sähköposti</h3>
+                    <h3 className="font-semibold text-white">{t('contact.sidebar.email')}</h3>
                     <a href="mailto:info@plateos.fi" className="text-orange-500 hover:underline">
                       info@plateos.fi
                     </a>
                   </div>
                 </div>
-              </Card>
-
-              <Card className="p-6 bg-white/5 border-white/10">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500/20 to-red-500/20 flex items-center justify-center text-orange-500">
-                    <Phone className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-white">Puhelin</h3>
-                    <a href="tel:+358401234567" className="text-white/60 hover:text-white">
-                      +358 40 123 4567
-                    </a>
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="p-6 bg-white/5 border-white/10">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500/20 to-red-500/20 flex items-center justify-center text-orange-500">
-                    <MapPin className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-white">Sijainti</h3>
-                    <p className="text-white/60">Helsinki, Suomi</p>
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="p-6 bg-gradient-to-br from-orange-500/10 to-red-500/10 border-orange-500/20">
-                <h3 className="font-semibold text-white mb-2">Vastausaika</h3>
-                <p className="text-white/60 text-sm">
-                  Vastaamme yleensä 24 tunnin sisällä arkipäivisin. 
-                  Kiireellisissä asioissa suosittelemme soittamista.
-                </p>
               </Card>
             </div>
 
@@ -176,16 +140,16 @@ export default function LandingContactPage() {
                   <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-6">
                     <CheckCircle className="w-8 h-8 text-green-500" />
                   </div>
-                  <h2 className="text-2xl font-bold text-white mb-4">Kiitos yhteydenotostasi!</h2>
+                  <h2 className="text-2xl font-bold text-white mb-4">{t('contact.form.success.title')}</h2>
                   <p className="text-white/60 mb-6">
-                    Olemme vastaanottaneet viestisi ja palaamme asiaan mahdollisimman pian.
+                    {t('contact.form.success.message')}
                   </p>
                   <Button
                     onClick={() => setIsSubmitted(false)}
                     variant="outline"
                     className="border-white/20 text-white hover:bg-white/10"
                   >
-                    Lähetä uusi viesti
+                    {t('contact.form.submit')}
                   </Button>
                 </Card>
               ) : (
@@ -211,60 +175,47 @@ export default function LandingContactPage() {
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid md:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <Label htmlFor="name" className="text-white/80">Nimi *</Label>
+                        <Label htmlFor="name" className="text-white/80">{t('contact.form.name')} *</Label>
                         <Input
                           id="name"
                           required
                           value={formData.name}
                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          placeholder="Matti Meikäläinen"
+                          placeholder={t('contact.placeholder.name')}
                           className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-orange-500/50"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="email" className="text-white/80">Sähköposti *</Label>
+                        <Label htmlFor="email" className="text-white/80">{t('contact.form.email')} *</Label>
                         <Input
                           id="email"
                           type="email"
                           required
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          placeholder="matti@esimerkki.fi"
-                          className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-orange-500/50"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="phone" className="text-white/80">Puhelin</Label>
-                        <Input
-                          id="phone"
-                          type="tel"
-                          value={formData.phone}
-                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          placeholder="+358 40 123 4567"
-                          className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-orange-500/50"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="subject" className="text-white/80">Aihe *</Label>
-                        <Input
-                          id="subject"
-                          required
-                          value={formData.subject}
-                          onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                          placeholder={
-                            formType === 'complaint' ? 'Palaute / Reklamaatio' :
-                            formType === 'support' ? 'Tukipyyntö' : 'Aihe'
-                          }
+                          placeholder={t('contact.placeholder.email')}
                           className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-orange-500/50"
                         />
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="message" className="text-white/80">Viesti *</Label>
+                      <Label htmlFor="subject" className="text-white/80">{t('contact.form.subject')} *</Label>
+                      <Input
+                        id="subject"
+                        required
+                        value={formData.subject}
+                        onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                        placeholder={
+                          formType === 'complaint' ? t('contact.placeholder.subject.complaint') :
+                          formType === 'support' ? t('contact.placeholder.subject.support') : t('contact.placeholder.subject.general')
+                        }
+                        className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-orange-500/50"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="message" className="text-white/80">{t('contact.form.message')} *</Label>
                       <Textarea
                         id="message"
                         required
@@ -273,10 +224,10 @@ export default function LandingContactPage() {
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                         placeholder={
                           formType === 'complaint' 
-                            ? 'Kuvaile ongelma tai anna palautetta...' 
+                            ? t('contact.placeholder.message.complaint')
                             : formType === 'support'
-                            ? 'Kuvaile kysymyksesi tai ongelmasi...'
-                            : 'Kirjoita viestisi tähän...'
+                            ? t('contact.placeholder.message.support')
+                            : t('contact.placeholder.message.general')
                         }
                         className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-orange-500/50 resize-none"
                       />
@@ -296,12 +247,12 @@ export default function LandingContactPage() {
                       {isSubmitting ? (
                         <>
                           <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                          Lähetetään...
+                          {t('contact.form.sending')}
                         </>
                       ) : (
                         <>
                           <Send className="w-5 h-5 mr-2" />
-                          Lähetä viesti
+                          {t('contact.form.submit')}
                         </>
                       )}
                     </Button>
@@ -316,7 +267,7 @@ export default function LandingContactPage() {
       {/* Footer */}
       <footer className="py-8 border-t border-white/10">
         <div className="max-w-7xl mx-auto px-6 text-center text-sm text-white/30">
-          © 2025 PlateOS. Kaikki oikeudet pidätetään.
+          © 2025 PlateOS. {t('footer.copyright')}
         </div>
       </footer>
     </div>

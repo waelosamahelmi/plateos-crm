@@ -2,6 +2,7 @@ app = 'plateos-landing-page'
 primary_region = 'arn'
 
 [build]
+  # Build args are passed via deploy.ps1 script to keep secrets out of version control
 
 [http_service]
   internal_port = 80

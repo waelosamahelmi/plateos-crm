@@ -108,8 +108,8 @@ const mockConfig: RestaurantConfig = {
   facebook: "https://facebook.com/plateosdemo",
   address: {
     street: "Demo Street 123",
-    postalCode: "00100",
-    city: "Helsinki",
+    postalCode: "15100",
+    city: "Lahti",
   },
   hours: {
     general: {
@@ -173,8 +173,8 @@ const mockBranches: Branch[] = [
     phone: "+358 40 123 4567",
     email: "keskusta@plateos-demo.com",
     address: "Demo Street 123",
-    postalCode: "00100",
-    city: "Helsinki",
+    postalCode: "15100",
+    city: "Lahti",
     isOpen: true,
     openingHours: {
       monday: { open: "10:00", close: "22:00" },
@@ -193,8 +193,8 @@ const mockBranches: Branch[] = [
     phone: "+358 40 765 4321",
     email: "itakeskus@plateos-demo.com",
     address: "East Street 456",
-    postalCode: "00900",
-    city: "Helsinki",
+    postalCode: "15200",
+    city: "Lahti",
     isOpen: true,
     openingHours: {
       monday: { open: "10:00", close: "21:00" },
@@ -211,19 +211,19 @@ const mockBranches: Branch[] = [
 const mockLocations: Location[] = [
   {
     id: 1,
-    name: "K-Market Kamppi",
-    address: "Kampinkatu 1",
-    postalCode: "00100",
-    city: "Helsinki",
-    region: "Helsinki",
+    name: "K-Market Lahti",
+    address: "Kauppakatu 1",
+    postalCode: "15100",
+    city: "Lahti",
+    region: "Lahti",
   },
   {
     id: 2,
-    name: "S-Market Kallio",
-    address: "Kallion tie 2",
-    postalCode: "00530",
-    city: "Helsinki",
-    region: "Helsinki",
+    name: "S-Market Lahti",
+    address: "Aleksanterinkatu 2",
+    postalCode: "15140",
+    city: "Lahti",
+    region: "Lahti",
   },
   {
     id: 3,

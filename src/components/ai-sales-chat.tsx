@@ -18,7 +18,7 @@ export function AISalesChat({ onClose }: AISalesChatProps) {
     {
       role: "assistant",
       content:
-        "Hei! 👋 Olen PlateOS:n myyntiassistentti. Autan sinua löytämään täydellisen ravintolaratkaisun. Mitä haluaisit tietää PlateOS:sta?",
+        "Hei! 👋 Olen PlateOS:n myyntiassistentti.\n\nHello! 👋 I'm the PlateOS sales assistant.\n\nMerhaba! 👋 Ben PlateOS satış asistanıyım.\n\nمرحباً! 👋 أنا مساعد مبيعات PlateOS.\n\nHow can I help you today?",
     },
   ]);
   const [input, setInput] = useState("");
@@ -42,13 +42,19 @@ export function AISalesChat({ onClose }: AISalesChatProps) {
     setIsLoading(true);
 
     try {
+      const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY;
+      console.log("API Key available:", !!apiKey, apiKey ? `${apiKey.substring(0, 10)}...` : "none");
+      
+      if (!apiKey) {
+        throw new Error("API key not configured");
+      }
       const response = await fetch(
         "https://openrouter.ai/api/v1/chat/completions",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer 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`,
+            Authorization: `Bearer ${apiKey}`,
             "HTTP-Referer": window.location.origin,
             "X-Title": "PlateOS Demo",
           },
@@ -57,37 +63,50 @@ export function AISalesChat({ onClose }: AISalesChatProps) {
             messages: [
               {
                 role: "system",
-                content: `Olet PlateOS-ravintolajärjestelmän myyntiassistentti. Tehtäväsi on auttaa potentiaalisia asiakkaita ymmärtämään PlateOS:n edut ja ohjata heidät tilaamaan järjestelmä.
+                content: `You are a multilingual sales assistant for PlateOS restaurant management system. 
 
-TUOTTEEN TIEDOT:
-- Nimi: PlateOS
-- Hinta: 1500€ kertamaksu
-- Hosting: Ilmainen ensimmäisen vuoden, sen jälkeen 10€/kk
-- Käyttöönotto: 7 päivää tilauksesta
+CRITICAL: ALWAYS respond in the SAME LANGUAGE the customer writes in. You MUST support:
+- Finnish (Suomi)
+- English
+- Arabic (العربية) 
+- Turkish (Türkçe)
+- Any other language the customer uses
 
-OMINAISUUDET:
-1. Modernin verkkosivusto (responsiivinen, toimii kaikilla laitteilla)
-2. Android-mobiilisovellus asiakkaille
-3. Täydellinen admin-hallintapaneeli
-4. Verkkokauppa-toiminnot (tilausten vastaanotto)
-5. Stripe-maksuintegraatio
-6. Menu- ja hintojen hallinta
-7. Tilausten hallinta reaaliajassa
-8. Reaaliaikaiset ilmoitukset uusista tilauksista
-9. Varaston hallinta
-10. Analytiikka ja raportit
+PRODUCT INFORMATION:
+- Name: PlateOS
+- Price: €1500 one-time setup fee
+- Hosting: Free first year, then €10/month
+- Deployment: 7 days from order
 
-EDUT:
-- Lisää verkkomyyntiä 40% keskimäärin
-- Helpottaa tilaustenhallintaa
-- Vähentää puhelinmyyntiä
-- Modernisoi ravintolan brändiä
-- Asiakkaat voivat tilata 24/7
+FEATURES:
+1. Modern responsive website (works on all devices)
+2. Android mobile app for customers
+3. Complete admin dashboard
+4. E-commerce features (order receiving)
+5. Stripe payment integration
+6. Menu and price management
+7. Real-time order management
+8. Real-time notifications for new orders
+9. Inventory management
+10. Analytics and reports
 
-TAKUU:
-- 30 päivän rahat takaisin -takuu
+BENEFITS:
+- Increases online sales by 40% on average
+- Simplifies order management
+- Reduces phone orders
+- Modernizes restaurant brand
+- Customers can order 24/7
 
-VASTAA AINA SUOMEKSI. Ole ystävällinen, innostunut ja auta asiakasta ymmärtämään miten PlateOS voi auttaa heidän ravintolaansa. Kysy asiakkaan tarpeista ja vastaa niiden mukaan. Jos asiakas on valmis tilaamaan, kehota häntä antamaan yhteystiedot.`,
+GUARANTEE:
+- 30-day money-back guarantee
+
+CONTACT:
+- Email: info@plateos.fi
+- Website: plateos.fi
+
+Be friendly, enthusiastic, and help the customer understand how PlateOS can help their restaurant. Ask about their needs and respond accordingly. If the customer is ready to order, encourage them to provide their contact details or visit plateos.fi/register.
+
+Remember: ALWAYS reply in the customer's language!`,
               },
               ...messages,
               { role: "user", content: userMessage },
@@ -97,11 +116,13 @@ VASTAA AINA SUOMEKSI. Ole ystävällinen, innostunut ja auta asiakasta ymmärtä
       );
 
       if (!response.ok) {
-        throw new Error("API request failed");
+        const errorText = await response.text();
+        console.error("API Error:", response.status, errorText);
+        throw new Error(`API request failed: ${response.status}`);
       }
 
       const data = await response.json();
-      const assistantMessage = data.choices[0]?.message?.content || "Anteeksi, tapahtui virhe. Yritä uudelleen.";
+      const assistantMessage = data.choices[0]?.message?.content || "Sorry, an error occurred. Please try again.";
 
       setMessages((prev) => [
         ...prev,
@@ -114,7 +135,7 @@ VASTAA AINA SUOMEKSI. Ole ystävällinen, innostunut ja auta asiakasta ymmärtä
         {
           role: "assistant",
           content:
-            "Anteeksi, en pysty vastaamaan juuri nyt. Ota yhteyttä suoraan: info@plateos.fi tai soita +358 40 123 4567",
+            "Sorry, I can't respond right now. Please contact us directly:\n\n📧 info@plateos.fi\n🌐 plateos.fi",
         },
       ]);
     } finally {
@@ -130,10 +151,10 @@ VASTAA AINA SUOMEKSI. Ole ystävällinen, innostunut ja auta asiakasta ymmärtä
   };
 
   const quickQuestions = [
+    "What does PlateOS cost?",
     "Mitä PlateOS maksaa?",
-    "Miten se toimii?",
-    "Mitä ominaisuuksia siinä on?",
-    "Kuinka kauan käyttöönotto kestää?",
+    "PlateOS ne kadar?",
+    "كم سعر PlateOS؟",
   ];
 
   return (

@@ -1,5 +1,5 @@
 import { useData } from "@/context/DataContext";
-import { UtensilsCrossed, Phone, Mail, MapPin, Heart, Facebook, Instagram } from "lucide-react";
+import { UtensilsCrossed, Mail, Heart, Facebook, Instagram } from "lucide-react";
 
 // TikTok Icon Component
 const TikTokIcon = ({ className }: { className?: string }) => (
@@ -21,13 +21,7 @@ export function Footer() {
   // Mock restaurant config
   const config = {
     name: "PlateOS Demo",
-    phone: "+358 40 123 4567",
-    email: "info@plateos.demo",
-    address: {
-      street: "Demo Street 123",
-      postalCode: "00100",
-      city: "Helsinki"
-    },
+    email: "info@plateos.fi",
     about: {
       story: "A modern restaurant ordering system built with React and TypeScript.",
       storyEn: "A modern restaurant ordering system built with React and TypeScript."
@@ -149,15 +143,6 @@ export function Footer() {
             </h3>
             <div className="space-y-4">
               <a
-                href={`tel:${config.phone}`}
-                className="flex items-start space-x-3 text-gray-400 hover:text-white transition-all group"
-              >
-                <div className="bg-white/10 backdrop-blur-sm p-2.5 rounded-xl group-hover:bg-gradient-to-r group-hover:from-red-500 group-hover:to-orange-500 transition-all group-hover:scale-110 shadow-lg">
-                  <Phone className="w-5 h-5 flex-shrink-0 group-hover:rotate-12 transition-transform" />
-                </div>
-                <span className="pt-1">{config.phone}</span>
-              </a>
-              <a
                 href={`mailto:${config.email}`}
                 className="flex items-start space-x-3 text-gray-400 hover:text-white transition-all group"
               >
@@ -165,17 +150,6 @@ export function Footer() {
                   <Mail className="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" />
                 </div>
                 <span className="pt-1 break-all">{config.email}</span>
-              </a>
-              <a
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${config.address.street}, ${config.address.postalCode} ${config.address.city}`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-start space-x-3 text-gray-400 hover:text-white transition-all group"
-              >
-                <div className="bg-white/10 backdrop-blur-sm p-2.5 rounded-xl group-hover:bg-gradient-to-r group-hover:from-red-500 group-hover:to-orange-500 transition-all group-hover:scale-110 shadow-lg">
-                  <MapPin className="w-5 h-5 flex-shrink-0 group-hover:bounce transition-transform" />
-                </div>
-                <span className="pt-1">{config.address.street}, {config.address.postalCode} {config.address.city}</span>
               </a>
             </div>
           </div>

@@ -22,6 +22,7 @@ import LoginPage from './pages/LoginPage';
 import { Toaster } from "@/components/ui/toaster";
 import { MobileAppPreview } from '@/components/mobile-app-preview-full';
 import { TourGuide } from '@/components/tour-guide';
+import { DemoBanner, DemoFloatingCTA } from '@/components/demo-banner';
 import { useLanguage } from './lib/language-context';
 
 function AppContent() {
@@ -34,7 +35,8 @@ function AppContent() {
 
   return (
     <>
-      <div className="min-h-screen bg-background">
+      {isDemoPage && <DemoBanner />}
+      <div className={`min-h-screen bg-background ${isDemoPage ? 'pt-12' : ''}`}>
         <Switch>
           <Route path="/" component={LandingPageAwwwards} />
           <Route path="/contact" component={LandingContactPage} />
@@ -56,6 +58,7 @@ function AppContent() {
         </Switch>
         <Toaster />
         {isDemoPage && <MobileAppPreview />}
+        {isDemoPage && <DemoFloatingCTA />}
       </div>
       {isDemoPage && showTour && (
         <TourGuide language={language} onComplete={() => setShowTour(false)} />

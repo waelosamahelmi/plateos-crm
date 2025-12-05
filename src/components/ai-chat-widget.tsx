@@ -33,7 +33,7 @@ export function AIChatWidget() {
     {
       role: "assistant",
       content:
-        "Hei! 👋 Olen PlateOS:n avustaja. Voin auttaa sinua ymmärtämään palveluitamme, vastata kysymyksiisi tai auttaa rekisteröimään ravintolasi. Miten voin auttaa?",
+        "👋 Hello! I'm your PlateOS assistant.\n\nI can help you in: 🇫🇮 Finnish | 🇬🇧 English | 🇹🇷 Turkish | 🇸🇦 Arabic\n\nHow can I help you today?",
     },
   ]);
   const [input, setInput] = useState("");
@@ -135,13 +135,20 @@ export function AIChatWidget() {
     setCollectedData(newCollectedData);
 
     try {
+      const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY;
+      console.log("API Key available:", !!apiKey);
+      
+      if (!apiKey) {
+        throw new Error("API key not configured");
+      }
+      
       const response = await fetch(
         "https://openrouter.ai/api/v1/chat/completions",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_OPENROUTER_API_KEY}`,
+            Authorization: `Bearer ${apiKey}`,
             "HTTP-Referer": window.location.origin,
             "X-Title": "PlateOS Sales",
           },
@@ -150,10 +157,15 @@ export function AIChatWidget() {
             messages: [
               {
                 role: "system",
-                content: `You are a sales assistant and registration helper for PlateOS restaurant system. You can communicate in BOTH FINNISH AND ENGLISH - respond in the language the customer uses. Your tasks are:
+                content: `You are a multilingual sales assistant and registration helper for PlateOS restaurant system.
+
+CRITICAL LANGUAGE RULE: ALWAYS respond in the SAME LANGUAGE the customer writes in!
+Supported languages: Finnish, English, Arabic (العربية), Turkish (Türkçe), and any other language.
+
+Your tasks are:
 1. Help potential customers understand PlateOS benefits
 2. Answer questions about the service
-3. IMPORTANT: Collect restaurant information for registration when customer shows interest
+3. Collect restaurant information for registration when customer shows interest
 
 PRODUCT INFORMATION:
 - Name: PlateOS
@@ -169,16 +181,21 @@ FEATURES:
 - Real-time notifications
 - Analytics and reports
 
+BENEFITS:
+- Increases online sales by 40% on average
+- Customers can order 24/7
+- Real-time order tracking
+- 30-day money-back guarantee
+
 REGISTRATION DATA COLLECTION:
 If customer wants to order or register, ask these details ONE AT A TIME in a friendly way:
 1. Restaurant name
 2. Contact person name
 3. Email address
-4. Phone number
-5. Restaurant address and city
-6. Restaurant type (pizza, kebab, sushi, etc.)
-7. Brief menu description
-8. Do you offer: pickup, delivery, dine-in?
+4. Restaurant address and city
+5. Restaurant type (pizza, kebab, sushi, etc.)
+6. Brief menu description
+7. Do you offer: pickup, delivery, dine-in?
 
 COLLECTED DATA SO FAR:
 ${JSON.stringify(collectedData, null, 2)}
@@ -186,7 +203,7 @@ ${JSON.stringify(collectedData, null, 2)}
 When all data is collected, tell the customer that registration has been submitted and we'll contact them within 24 hours.
 At the end, respond EXACTLY with: [REGISTRATION_COMPLETE] if all data has been collected.
 
-ALWAYS RESPOND IN THE SAME LANGUAGE THE CUSTOMER USES (Finnish or English). Be friendly and professional. Don't ask all questions at once - have a natural conversation.`,
+REMEMBER: ALWAYS reply in the customer's language! Be friendly and professional.`,
               },
               ...messages.map(m => ({ role: m.role, content: m.content })),
               { role: "user", content: userMessage },
@@ -196,11 +213,13 @@ ALWAYS RESPOND IN THE SAME LANGUAGE THE CUSTOMER USES (Finnish or English). Be f
       );
 
       if (!response.ok) {
-        throw new Error("API request failed");
+        const errorText = await response.text();
+        console.error("API Error:", response.status, errorText);
+        throw new Error(`API request failed: ${response.status}`);
       }
 
       const data = await response.json();
-      let assistantMessage = data.choices[0]?.message?.content || "Anteeksi, tapahtui virhe. Yritä uudelleen.";
+      let assistantMessage = data.choices[0]?.message?.content || "Sorry, an error occurred. Please try again.";
 
       // Check if registration is complete
       if (assistantMessage.includes('[REGISTRATION_COMPLETE]')) {
@@ -238,7 +257,7 @@ ALWAYS RESPOND IN THE SAME LANGUAGE THE CUSTOMER USES (Finnish or English). Be f
       await saveMessage('assistant', assistantMessage);
     } catch (error) {
       console.error("Error calling OpenRouter:", error);
-      const errorMessage = "Anteeksi, en pysty vastaamaan juuri nyt. Ota yhteyttä suoraan: info@plateos.fi";
+      const errorMessage = "Sorry, I can't respond right now. Please contact us:\n📧 info@plateos.fi\n🌐 plateos.fi";
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: errorMessage },
@@ -257,9 +276,10 @@ ALWAYS RESPOND IN THE SAME LANGUAGE THE CUSTOMER USES (Finnish or English). Be f
   };
 
   const quickQuestions = [
-    "Mitä PlateOS maksaa?",
-    "Haluan rekisteröidä ravintolani",
-    "Miten pääsen alkuun?",
+    "What does it cost?",
+    "Mitä se maksaa?",
+    "Fiyatı ne kadar?",
+    "كم التكلفة؟",
   ];
 
   // Floating button when closed

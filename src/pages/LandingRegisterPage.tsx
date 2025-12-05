@@ -26,10 +26,13 @@ import {
   ChevronLeft
 } from "lucide-react";
 import { submitRegistration } from "@/lib/supabase";
+import { useLanguage, isRTL } from "@/lib/language-context";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 type Step = 1 | 2 | 3 | 4;
 
 export default function LandingRegisterPage() {
+  const { language, t } = useLanguage();
   const [step, setStep] = useState<Step>(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -114,49 +117,49 @@ export default function LandingRegisterPage() {
       if (result) {
         setIsSubmitted(true);
       } else {
-        setError('Rekisteröinti epäonnistui. Yritä uudelleen.');
+        setError(t('register.errorSubmit'));
       }
     } catch (err) {
-      setError('Tapahtui virhe. Yritä uudelleen myöhemmin.');
+      setError(t('common.error'));
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const restaurantTypes = [
-    'Pizza & Pasta',
-    'Kebab & Grilli',
-    'Sushi & Japanilainen',
-    'Kiinalainen',
-    'Intialainen',
-    'Thaimaalainen',
-    'Hampurilaiset',
-    'Kahvila',
-    'Fine Dining',
-    'Muu',
+    { key: 'register.type.pizza', value: 'Pizza & Pasta' },
+    { key: 'register.type.kebab', value: 'Kebab & Grill' },
+    { key: 'register.type.sushi', value: 'Sushi & Japanese' },
+    { key: 'register.type.chinese', value: 'Chinese' },
+    { key: 'register.type.indian', value: 'Indian' },
+    { key: 'register.type.thai', value: 'Thai' },
+    { key: 'register.type.burger', value: 'Burgers' },
+    { key: 'register.type.cafe', value: 'Café' },
+    { key: 'register.type.fineDining', value: 'Fine Dining' },
+    { key: 'register.type.other', value: 'Other' },
   ];
 
   const timelines = [
-    'Heti / Mahdollisimman pian',
-    '1-2 viikon sisällä',
-    'Kuukauden sisällä',
-    '1-3 kuukauden sisällä',
-    'Myöhemmin / En osaa sanoa',
+    { key: 'register.timeline.asap', value: 'ASAP' },
+    { key: 'register.timeline.1-2weeks', value: '1-2 weeks' },
+    { key: 'register.timeline.1month', value: '1 month' },
+    { key: 'register.timeline.1-3months', value: '1-3 months' },
+    { key: 'register.timeline.later', value: 'Later' },
   ];
 
   const sources = [
-    'Google-haku',
-    'Sosiaalinen media',
-    'Toisen ravintolan suositus',
-    'Mainos',
-    'Muu',
+    { key: 'register.source.google', value: 'Google' },
+    { key: 'register.source.social', value: 'Social media' },
+    { key: 'register.source.referral', value: 'Referral' },
+    { key: 'register.source.ad', value: 'Advertisement' },
+    { key: 'register.source.other', value: 'Other' },
   ];
 
   const steps = [
-    { num: 1, label: 'Ravintola', icon: <Store className="w-5 h-5" /> },
-    { num: 2, label: 'Yhteystiedot', icon: <User className="w-5 h-5" /> },
-    { num: 3, label: 'Sijainti', icon: <MapPin className="w-5 h-5" /> },
-    { num: 4, label: 'Menu & Muut', icon: <Utensils className="w-5 h-5" /> },
+    { num: 1, label: t('register.step1.label'), icon: <Store className="w-5 h-5" /> },
+    { num: 2, label: t('register.step2.label'), icon: <User className="w-5 h-5" /> },
+    { num: 3, label: t('register.step3.label'), icon: <MapPin className="w-5 h-5" /> },
+    { num: 4, label: t('register.step4.label'), icon: <Utensils className="w-5 h-5" /> },
   ];
 
   const renderStep = () => {
@@ -167,14 +170,14 @@ export default function LandingRegisterPage() {
             <div className="space-y-2">
               <Label htmlFor="restaurant_name" className="text-white/80 flex items-center gap-2">
                 <Store className="w-4 h-4" />
-                Ravintolan nimi *
+                {t('register.restaurantName')} *
               </Label>
               <Input
                 id="restaurant_name"
                 required
                 value={formData.restaurant_name}
                 onChange={(e) => setFormData({ ...formData, restaurant_name: e.target.value })}
-                placeholder="Esim. Pizzeria Mario"
+                placeholder={t('register.restaurantNamePlaceholder')}
                 className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-orange-500/50 h-12"
               />
             </div>
@@ -182,18 +185,18 @@ export default function LandingRegisterPage() {
             <div className="space-y-2">
               <Label className="text-white/80 flex items-center gap-2">
                 <Utensils className="w-4 h-4" />
-                Ravintolatyyppi *
+                {t('register.restaurantType')} *
               </Label>
               <Select
                 value={formData.restaurant_type}
                 onValueChange={(value) => setFormData({ ...formData, restaurant_type: value })}
               >
                 <SelectTrigger className="bg-white/5 border-white/10 text-white h-12">
-                  <SelectValue placeholder="Valitse ravintolatyyppi" />
+                  <SelectValue placeholder={t('register.restaurantTypePlaceholder')} />
                 </SelectTrigger>
                 <SelectContent>
                   {restaurantTypes.map((type) => (
-                    <SelectItem key={type} value={type}>{type}</SelectItem>
+                    <SelectItem key={type.value} value={type.value}>{t(type.key)}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -201,14 +204,14 @@ export default function LandingRegisterPage() {
 
             <div className="space-y-2">
               <Label htmlFor="website" className="text-white/80">
-                Nykyinen verkkosivusto (jos on)
+                {t('register.websiteLabel')}
               </Label>
               <Input
                 id="website"
                 type="url"
                 value={formData.website}
                 onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                placeholder="https://www.ravintolasi.fi"
+                placeholder={t('register.websitePlaceholder')}
                 className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-orange-500/50 h-12"
               />
             </div>
@@ -221,14 +224,14 @@ export default function LandingRegisterPage() {
             <div className="space-y-2">
               <Label htmlFor="contact_name" className="text-white/80 flex items-center gap-2">
                 <User className="w-4 h-4" />
-                Yhteyshenkilön nimi *
+                {t('register.contactName')} *
               </Label>
               <Input
                 id="contact_name"
                 required
                 value={formData.contact_name}
                 onChange={(e) => setFormData({ ...formData, contact_name: e.target.value })}
-                placeholder="Matti Meikäläinen"
+                placeholder={t('register.contactNamePlaceholder')}
                 className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-orange-500/50 h-12"
               />
             </div>
@@ -236,7 +239,7 @@ export default function LandingRegisterPage() {
             <div className="space-y-2">
               <Label htmlFor="email" className="text-white/80 flex items-center gap-2">
                 <Mail className="w-4 h-4" />
-                Sähköpostiosoite *
+                {t('register.emailLabel')} *
               </Label>
               <Input
                 id="email"
@@ -244,7 +247,7 @@ export default function LandingRegisterPage() {
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                placeholder="matti@ravintola.fi"
+                placeholder={t('register.emailPlaceholder')}
                 className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-orange-500/50 h-12"
               />
             </div>
@@ -252,7 +255,7 @@ export default function LandingRegisterPage() {
             <div className="space-y-2">
               <Label htmlFor="phone" className="text-white/80 flex items-center gap-2">
                 <Phone className="w-4 h-4" />
-                Puhelinnumero *
+                {t('register.phone')} *
               </Label>
               <Input
                 id="phone"
@@ -260,7 +263,7 @@ export default function LandingRegisterPage() {
                 required
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                placeholder="+358 40 123 4567"
+                placeholder={t('register.phonePlaceholder')}
                 className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-orange-500/50 h-12"
               />
             </div>
@@ -273,66 +276,66 @@ export default function LandingRegisterPage() {
             <div className="space-y-2">
               <Label htmlFor="address" className="text-white/80 flex items-center gap-2">
                 <MapPin className="w-4 h-4" />
-                Osoite *
+                {t('register.address')} *
               </Label>
               <Input
                 id="address"
                 required
                 value={formData.address}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                placeholder="Esimerkkikatu 123"
+                placeholder={t('register.addressPlaceholder')}
                 className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-orange-500/50 h-12"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="city" className="text-white/80">Kaupunki *</Label>
+                <Label htmlFor="city" className="text-white/80">{t('register.city')} *</Label>
                 <Input
                   id="city"
                   required
                   value={formData.city}
                   onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                  placeholder="Helsinki"
+                  placeholder={t('register.cityPlaceholder')}
                   className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-orange-500/50 h-12"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="postal_code" className="text-white/80">Postinumero *</Label>
+                <Label htmlFor="postal_code" className="text-white/80">{t('register.postalCode')} *</Label>
                 <Input
                   id="postal_code"
                   required
                   value={formData.postal_code}
                   onChange={(e) => setFormData({ ...formData, postal_code: e.target.value })}
-                  placeholder="00100"
+                  placeholder={t('register.postalCodePlaceholder')}
                   className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-orange-500/50 h-12"
                 />
               </div>
             </div>
 
             <div className="space-y-3">
-              <Label className="text-white/80">Palvelut *</Label>
+              <Label className="text-white/80">{t('register.services')} *</Label>
               <div className="flex flex-wrap gap-4">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <Checkbox
                     checked={formData.has_pickup}
                     onCheckedChange={(checked) => setFormData({ ...formData, has_pickup: !!checked })}
                   />
-                  <span className="text-white/80">Nouto</span>
+                  <span className="text-white/80">{t('register.pickup')}</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <Checkbox
                     checked={formData.has_delivery}
                     onCheckedChange={(checked) => setFormData({ ...formData, has_delivery: !!checked })}
                   />
-                  <span className="text-white/80">Kotiinkuljetus</span>
+                  <span className="text-white/80">{t('register.delivery')}</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <Checkbox
                     checked={formData.has_dine_in}
                     onCheckedChange={(checked) => setFormData({ ...formData, has_dine_in: !!checked })}
                   />
-                  <span className="text-white/80">Paikan päällä</span>
+                  <span className="text-white/80">{t('register.dineIn')}</span>
                 </label>
               </div>
             </div>
@@ -340,13 +343,13 @@ export default function LandingRegisterPage() {
             <div className="space-y-2">
               <Label htmlFor="opening_hours" className="text-white/80 flex items-center gap-2">
                 <Clock className="w-4 h-4" />
-                Aukioloajat
+                {t('register.openingHours')}
               </Label>
               <Input
                 id="opening_hours"
                 value={formData.opening_hours}
                 onChange={(e) => setFormData({ ...formData, opening_hours: e.target.value })}
-                placeholder="Ma-Pe 11-21, La-Su 12-22"
+                placeholder={t('register.openingHoursPlaceholder')}
                 className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-orange-500/50 h-12"
               />
             </div>
@@ -359,7 +362,7 @@ export default function LandingRegisterPage() {
             <div className="space-y-2">
               <Label htmlFor="menu_description" className="text-white/80 flex items-center gap-2">
                 <FileText className="w-4 h-4" />
-                Kerro menustasi *
+                {t('register.menuDescriptionLabel')} *
               </Label>
               <Textarea
                 id="menu_description"
@@ -367,14 +370,14 @@ export default function LandingRegisterPage() {
                 rows={4}
                 value={formData.menu_description}
                 onChange={(e) => setFormData({ ...formData, menu_description: e.target.value })}
-                placeholder="Kuvaile lyhyesti ravintolasi ruokatarjontaa: pääruoat, erikoisuudet, hintahaarukka..."
+                placeholder={t('register.menuDescriptionPlaceholder')}
                 className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-orange-500/50 resize-none"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="menu_items_count" className="text-white/80">Tuotteiden määrä (arvio)</Label>
+                <Label htmlFor="menu_items_count" className="text-white/80">{t('register.menuItemsCount')}</Label>
                 <Input
                   id="menu_items_count"
                   type="number"
@@ -385,12 +388,12 @@ export default function LandingRegisterPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="current_system" className="text-white/80">Nykyinen järjestelmä</Label>
+                <Label htmlFor="current_system" className="text-white/80">{t('register.currentSystem')}</Label>
                 <Input
                   id="current_system"
                   value={formData.current_system}
                   onChange={(e) => setFormData({ ...formData, current_system: e.target.value })}
-                  placeholder="Esim. Wolt, Foodora, ei mitään"
+                  placeholder={t('register.currentSystemPlaceholder')}
                   className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-orange-500/50 h-12"
                 />
               </div>
@@ -399,45 +402,45 @@ export default function LandingRegisterPage() {
             <div className="space-y-2">
               <Label className="text-white/80 flex items-center gap-2">
                 <Palette className="w-4 h-4" />
-                Toivotut värit / brändi
+                {t('register.preferredColors')}
               </Label>
               <Input
                 value={formData.preferred_colors}
                 onChange={(e) => setFormData({ ...formData, preferred_colors: e.target.value })}
-                placeholder="Esim. punainen ja valkoinen, moderni ilme"
+                placeholder={t('register.preferredColorsPlaceholder')}
                 className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-orange-500/50 h-12"
               />
             </div>
 
             <div className="space-y-2">
-              <Label className="text-white/80">Aikataulu</Label>
+              <Label className="text-white/80">{t('register.timeline')}</Label>
               <Select
                 value={formData.timeline}
                 onValueChange={(value) => setFormData({ ...formData, timeline: value })}
               >
                 <SelectTrigger className="bg-white/5 border-white/10 text-white h-12">
-                  <SelectValue placeholder="Milloin haluaisit aloittaa?" />
+                  <SelectValue placeholder={t('register.timelinePlaceholder')} />
                 </SelectTrigger>
                 <SelectContent>
                   {timelines.map((timeline) => (
-                    <SelectItem key={timeline} value={timeline}>{timeline}</SelectItem>
+                    <SelectItem key={timeline.value} value={timeline.value}>{t(timeline.key)}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label className="text-white/80">Mistä kuulit meistä?</Label>
+              <Label className="text-white/80">{t('register.source')}</Label>
               <Select
                 value={formData.source}
                 onValueChange={(value) => setFormData({ ...formData, source: value })}
               >
                 <SelectTrigger className="bg-white/5 border-white/10 text-white h-12">
-                  <SelectValue placeholder="Valitse..." />
+                  <SelectValue placeholder={t('register.sourcePlaceholder')} />
                 </SelectTrigger>
                 <SelectContent>
                   {sources.map((source) => (
-                    <SelectItem key={source} value={source}>{source}</SelectItem>
+                    <SelectItem key={source.value} value={source.value}>{t(source.key)}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -445,14 +448,14 @@ export default function LandingRegisterPage() {
 
             <div className="space-y-2">
               <Label htmlFor="special_requirements" className="text-white/80">
-                Erityistoiveet tai lisätiedot
+                {t('register.specialRequirements')}
               </Label>
               <Textarea
                 id="special_requirements"
                 rows={3}
                 value={formData.special_requirements}
                 onChange={(e) => setFormData({ ...formData, special_requirements: e.target.value })}
-                placeholder="Kerro vapaasti muista toiveistasi..."
+                placeholder={t('register.specialRequirementsPlaceholder')}
                 className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-orange-500/50 resize-none"
               />
             </div>
@@ -462,7 +465,7 @@ export default function LandingRegisterPage() {
   };
 
   return (
-    <div ref={containerRef} className="bg-[#0a0a0a] text-white min-h-screen">
+    <div ref={containerRef} className="bg-[#0a0a0a] text-white min-h-screen" dir={isRTL(language) ? "rtl" : "ltr"}>
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -474,12 +477,15 @@ export default function LandingRegisterPage() {
               <span className="text-xl font-bold tracking-tight">PlateOS</span>
             </div>
           </Link>
-          <Link href="/">
-            <Button variant="ghost" className="text-white/70 hover:text-white">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Takaisin
-            </Button>
-          </Link>
+          <div className="flex items-center gap-4">
+            <LanguageSwitcher />
+            <Link href="/">
+              <Button variant="ghost" className="text-white/70 hover:text-white">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                {t('nav.back')}
+              </Button>
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -490,20 +496,19 @@ export default function LandingRegisterPage() {
               <div className="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-6">
                 <CheckCircle className="w-10 h-10 text-green-500" />
               </div>
-              <h2 className="text-3xl font-bold text-white mb-4">Kiitos rekisteröinnistä!</h2>
+              <h2 className="text-3xl font-bold text-white mb-4">{t('register.success.title')}</h2>
               <p className="text-white/60 mb-8 text-lg">
-                Olemme vastaanottaneet tietosi ja otamme sinuun yhteyttä 24 tunnin sisällä.
-                Valmistaudumme rakentamaan täydellisen järjestelmän ravintolallesi!
+                {t('register.success.subtitle')}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/">
                   <Button className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white">
-                    Takaisin etusivulle
+                    {t('register.backToHome')}
                   </Button>
                 </Link>
                 <Link href="/demo">
                   <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
-                    Kokeile demoa
+                    {t('register.tryDemo')}
                   </Button>
                 </Link>
               </div>
@@ -513,13 +518,13 @@ export default function LandingRegisterPage() {
               {/* Hero */}
               <div className="animate-in text-center mb-12">
                 <span className="text-orange-500 text-sm font-semibold uppercase tracking-widest mb-4 block">
-                  Rekisteröinti
+                  {t('register.badge')}
                 </span>
                 <h1 className="text-4xl md:text-5xl font-black mb-4">
-                  Aloita PlateOS:n kanssa
+                  {t('register.heroTitle')}
                 </h1>
                 <p className="text-white/60 text-lg">
-                  Kerro meille ravintolastasi niin räätälöimme täydellisen ratkaisun.
+                  {t('register.heroSubtitle')}
                 </p>
               </div>
 
@@ -567,7 +572,7 @@ export default function LandingRegisterPage() {
                         className="text-white/70 hover:text-white"
                       >
                         <ChevronLeft className="w-4 h-4 mr-2" />
-                        Edellinen
+                        {t('register.previous')}
                       </Button>
                     ) : (
                       <div />
@@ -581,17 +586,17 @@ export default function LandingRegisterPage() {
                       {isSubmitting ? (
                         <>
                           <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                          Lähetetään...
+                          {t('register.submitting')}
                         </>
                       ) : step < 4 ? (
                         <>
-                          Seuraava
+                          {t('register.next')}
                           <ChevronRight className="w-4 h-4 ml-2" />
                         </>
                       ) : (
                         <>
                           <Send className="w-5 h-5 mr-2" />
-                          Lähetä rekisteröinti
+                          {t('register.submit')}
                         </>
                       )}
                     </Button>
@@ -601,7 +606,7 @@ export default function LandingRegisterPage() {
 
               {/* Info */}
               <p className="text-center text-white/40 text-sm mt-6">
-                Rekisteröinti on täysin sitoumukseton. Otamme yhteyttä 24h sisällä.
+                {t('register.footerNote')}
               </p>
             </>
           )}
@@ -611,7 +616,7 @@ export default function LandingRegisterPage() {
       {/* Footer */}
       <footer className="py-8 border-t border-white/10">
         <div className="max-w-7xl mx-auto px-6 text-center text-sm text-white/30">
-          © 2025 PlateOS. Kaikki oikeudet pidätetään.
+          {t('footer.copyright')}
         </div>
       </footer>
     </div>

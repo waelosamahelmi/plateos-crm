@@ -96,7 +96,7 @@ export default function LandingPage() {
   const testimonials = [
     {
       name: "Maria Korhonen",
-      business: "Pizza Place Helsinki",
+      business: "Pizza Place Lahti",
       quote: "PlateOS muutti liiketoimintamme. Tilaukset lisääntyivät 40% ensimmäisen kuukauden aikana!",
       quoteEn: "PlateOS transformed our business. Orders increased 40% in the first month!",
       rating: 5
